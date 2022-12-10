@@ -66,16 +66,18 @@ def update_graph(option_slctd):
                     labels={
                         "min_playing_time": "time played",
                         "goals": "goals",},
-                    title="Tore pro Spielzeit"
+                    title="Tore pro Spielzeit",
+                    template="simple_white"
                     )
     
-    fig_a = px.histogram(dff, x="age", title="Alter der Mannschaften")
+    fig_a = px.histogram(dff, x="age", title="Alter der Mannschaften", template="simple_white")
 
     fig_c = px.bar(dff, x='squad', y='penalty_kicks_attempted',
                     labels={
                         "squad": "team",
                         "penalty_kicks_attempted": "penaltys",},
-                    title="Elfmeterschüsse"
+                    title="Elfmeterschüsse",
+                    template="simple_white"
                     )
 
 
