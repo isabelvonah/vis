@@ -9,50 +9,48 @@ import dash_bootstrap_components as dbc
 
 app = dash.Dash (__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-df = pd.read_csv(r'womens-world-cup.csv')
+df = pd.read_csv(r'cup_continent.csv')
 
 
 app.layout = html.Div([
 
     html.Div([
-        html.H1("Weltmeisterschaften im Damenfussball", style = {'text-align': 'left', 'font-weight': 'bold', 'color': 'white'}),
-    ], style={"padding": "1vw", "margin": "1vw", "background-color": "orange",}),
+        html.H1("Weltmeisterschaften im Damenfussball", style = {'text-align': 'left', 'font-weight': 'bold', 'color': 'white', 'display': 'inline-block '}),
+        html.Img(src=r"assets/Logo.png", style={"right": "2vw", "position": "absolute",})
+    ], style={"padding": "1vw", "margin": "1vw", "background-color": "orange","height": "10vh"}),
 
     html.Div([
 
-        html.H4("Wählen Sie ein Jahr aus", style = {'text-align': 'left'}),
-
-        dcc.Dropdown(id='year',
-                        options = [
-                            {"label": "1991", "value": 1991},
-                            {"label": "1995", "value": 1995},
-                            {"label": "1999", "value": 1999},
-                            {"label": "2003", "value": 2003},
-                            {"label": "2007", "value": 2007},
-                            {"label": "2011", "value": 2011},
-                            {"label": "2015", "value": 2015},
-                            {"label": "2019", "value": 2019}],
-                        multi = False,
-                        value=1991,
-                        style = {"width": "40%"}),
-
         html.Div([
-            html.Img(src=r"assets/balken.png", style={"width": "100%",}),
-            html.Img(src=r"assets/streudia.png", style={"width": "100%",}),
-            html.Img(src=r"assets/histogramm.png", style={"width": "100%",}),
-        ], style={'display': 'inline-block', 'width': '20vw', "background-color": "orange"}),
+            html.H4("Wählen Sie ein Jahr aus", style = {'text-align': 'left'}),
 
-        html.Div([
-            dcc.Graph(id='goals', figure={}, style={'display': 'inline-block', 'width': '60vw'}),
+            dcc.Dropdown(id='year',
+                            options = [
+                                {"label": "1991", "value": 1991},
+                                {"label": "1995", "value": 1995},
+                                {"label": "1999", "value": 1999},
+                                {"label": "2003", "value": 2003},
+                                {"label": "2007", "value": 2007},
+                                {"label": "2011", "value": 2011},
+                                {"label": "2015", "value": 2015},
+                                {"label": "2019", "value": 2019}],
+                            multi = False,
+                            value=1991,
+                            style = {"width": "100%"}),
+        ], style={"width": "15vw"}),
 
-            dcc.Graph(id='ages', figure={}, style={'display': 'inline-block', 'width': '60vw'}),
+    html.Div([
+        dcc.Graph(id='goals', figure={}, style={'display': 'inline-block', 'width': '38vw', 'height': '40vh'}),
 
-            dcc.Graph(id='penalty', figure={}, style={"width": "60vw"})
+        dcc.Graph(id='ages', figure={}, style={'display': 'inline-block', 'width': '38vw', 'height': '40vh'}),
 
-        ], style={'display': 'inline-block', 'width': '40vw'}),
+        dcc.Graph(id='penalty', figure={}, style={'display': 'inline-block', 'width': '38vw', 'height': '40vh'})
+
+    ], style={"margin-left": "18vw", "transform": "translateY(-100px)"}),
         
     ],
-    style={"margin-left": "10vw", "margin-top": "5vh", "margin-right": "5vw", "margin-bottom": "5vh"}),
+    style={"margin-left": "1vw", "margin-top": "5vh", "margin-right": "5vw"}),
+
 ])
 
 @app.callback(
@@ -89,7 +87,6 @@ def update_graph(option_slctd):
                     title="Elfmeterschüsse",
                     template="simple_white"
                     )
-
 
     return fig_g, fig_a, fig_c
 
