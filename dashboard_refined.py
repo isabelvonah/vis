@@ -15,8 +15,8 @@ df = pd.read_csv(r'womens-world-cup.csv')
 app.layout = html.Div([
 
     html.Div([
-        html.H1("Frauen-Fussball-WMs der Jahre 1991 bis 2019", style = {'text-align': 'left'}),
-    ], style={"padding": "1vw", "background-color": "green",}),
+        html.H1("Weltmeisterschaften im Damenfussball", style = {'text-align': 'left', 'font-weight': 'bold', 'color': 'white'}),
+    ], style={"padding": "1vw", "margin": "1vw", "background-color": "orange",}),
 
     html.Div([
 
@@ -36,13 +36,23 @@ app.layout = html.Div([
                         value=1991,
                         style = {"width": "40%"}),
 
-        dcc.Graph(id='goals', figure={}, style={'display': 'inline-block', 'width': '40vw'}),
+        html.Div([
+            html.Img(src=r"assets/balken.png", style={"width": "100%",}),
+            html.Img(src=r"assets/streudia.png", style={"width": "100%",}),
+            html.Img(src=r"assets/histogramm.png", style={"width": "100%",}),
+        ], style={'display': 'inline-block', 'width': '20vw', "background-color": "orange"}),
 
-        dcc.Graph(id='ages', figure={}, style={'display': 'inline-block', 'width': '40vw'}),
+        html.Div([
+            dcc.Graph(id='goals', figure={}, style={'display': 'inline-block', 'width': '60vw'}),
 
-        dcc.Graph(id='penalty', figure={}, style={"width": "80vw"})
+            dcc.Graph(id='ages', figure={}, style={'display': 'inline-block', 'width': '60vw'}),
+
+            dcc.Graph(id='penalty', figure={}, style={"width": "60vw"})
+
+        ], style={'display': 'inline-block', 'width': '40vw'}),
+        
     ],
-    style={"margin-left": "10vw", "margin-top": "5vh", "margin-right": "5vw", "margin-bottom": "5vh"})
+    style={"margin-left": "10vw", "margin-top": "5vh", "margin-right": "5vw", "margin-bottom": "5vh"}),
 ])
 
 @app.callback(
