@@ -37,12 +37,27 @@ app.layout = html.Div([
                             multi = False,
                             value=1991,
                             style = {"width": "100%"}),
+            
+            dcc.Dropdown(id='continent',
+                        options = [
+                            {"label": "Afrika", "value": "Afrika"},
+                            {"label": "Asien", "value": "Asien"},
+                            {"label": "Europa", "value": "Europa"},
+                            {"label": "Nordamerika", "value": "Nordamerika"},
+                            {"label": "Südamerika", "value": "Südamerika"},
+                            {"label": "Ozeanien", "value": "Ozeanien"}],
+                        multi = False,
+                        value="Afrika",
+                        style = {"width": "100%"}),
+            
         ], style={"width": "15vw"}),
 
     html.Div([
         dcc.Graph(id='goals', figure={}, style={'display': 'inline-block', 'width': '38vw', 'height': '40vh'}),
 
         dcc.Graph(id='ages', figure={}, style={'display': 'inline-block', 'width': '38vw', 'height': '40vh'}),
+
+        dcc.Graph(id='match', figure={}, style={'display': 'inline-block', 'width': '38vw', 'height': '40vh'}),
 
         dcc.Graph(id='penalty', figure={}, style={'display': 'inline-block', 'width': '38vw', 'height': '40vh'})
 
@@ -56,13 +71,16 @@ app.layout = html.Div([
 @app.callback(
       [Output(component_id='goals', component_property='figure'),
       Output(component_id='ages', component_property='figure'),
+      Output(component_id='match', component_property='figure'),
       Output(component_id='penalty', component_property='figure')],
-      [Input(component_id='year', component_property='value'),]
+      [Input(component_id='year', component_property='value'),
+      Input(component_id='continent', component_property='value')]
 )
 
-def update_graph(option_slctd):
+def update_graph(option_slctd, option_slctd2):
     dff = df.copy()
     dff = dff[dff["year"] == option_slctd]
+    dff = dff[dff["continent"] == option_slctd2]
 
 # Plotly express
     fig_g = px.scatter(dff, x="min_playing_time", y="goals", 
@@ -87,8 +105,13 @@ def update_graph(option_slctd):
                     title="Elfmeterschüsse",
                     template="simple_white"
                     )
+    
+    fig_m = px.line(dff, x="year", y="matches_played", color='squad',
+                    labels={"squad": "team",
+                        "matches_played": "Anzahl Spiele"},
+                    title="Spiele pro Team")
 
-    return fig_g, fig_a, fig_c
+    return fig_g, fig_a, fig_c, fig_m
 
 if __name__ == '__main__':
                app.run_server(debug=True)
