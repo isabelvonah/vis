@@ -37,6 +37,7 @@ app.layout = html.Div([
 
             html.H5("Möchtest du sogar einzelne Länder untersuchen? Dann wähle diese aus", style = {'text-align': 'left'}),
             
+            dcc.Slider(id='matches_played', min=0, max=8, value=3, step=1,)
             
         ], style={"width": "15vw", "height": "78vh", "padding": "1vw", "background-color": "lightgrey"} ),
 
@@ -62,15 +63,17 @@ app.layout = html.Div([
       Output(component_id='penalty', component_property='figure'),
       Output(component_id='match', component_property='figure')
       ],
-      [Input(component_id='conti', component_property='value')]
+      [Input(component_id='conti', component_property='value'),
+      Input(component_id='matches_played', component_property='value')]
 )
 
-def update_graph(option_slctd):
+def update_graph(option_slctd, option_slctd2):
     dff = df.copy()
     if option_slctd == ['all']:
-        dff = df
+        dff = dff
     else:
-        dff = df[df.continent.isin(option_slctd)]
+        dff = dff[dff.continent.isin(option_slctd)]
+    dff = dff[dff["matches_played"] <= option_slctd2]
 
 # Plotly express
     fig_g = px.scatter(dff, x="min_playing_time", y="goals", 
