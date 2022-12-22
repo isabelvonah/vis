@@ -16,11 +16,6 @@ all = df.continent.unique()
 options=[{'label':x , 'value':x} for x in all]
 options.append({'label': 'Select All', 'value': "all"})
 
-all_y = df.year.unique()
-
-options_y=[{'label':x , 'value':x} for x in all_y]
-options_y.append({'label': 'Select All', 'value': "all_y"})
-
 app.layout = html.Div([
 
     html.Div([
@@ -31,64 +26,56 @@ app.layout = html.Div([
     html.Div([
 
         html.Div([
-            html.H4("Wählen Sie ein Jahr aus", style = {'text-align': 'left'}),
+            html.H5("Wähle Kontinente aus, die du vergleichen möchtest", style = {'text-align': 'left'}),
 
-            dcc.Dropdown(id='conti', 
-                            options=[{'label':x , 'value':x} for x in all] + [{'label':'Select All' , 'value':'all'}] , 
-                            value= 'Select All', 
-                            multi=True, 
-                            style = {"width": "100%"}),
-            
-            dcc.Dropdown(id='year', 
-                            options=[{'label':x , 'value':x} for x in all_y] + [{'label':'Select All' , 'value':'all_y'}] , 
-                            value= 'Select All', 
-                            multi=True, 
-                            style = {"width": "100%"}),
+            dcc.Checklist(id='conti',
+                options=[{'label':x , 'value':x} for x in all],
+                value=all,
+                labelStyle={'display': 'block'},
+                style={"padding-left":"15%", "padding-top":"10%", "padding-bottom": "10%"}
+                ),
+
+            html.H5("Möchtest du sogar einzelne Länder untersuchen? Dann wähle diese aus", style = {'text-align': 'left'}),
             
             
-        ], style={"width": "15vw"}),
+        ], style={"width": "15vw", "height": "78vh", "padding": "1vw", "background-color": "lightgrey"} ),
 
-    html.Div([
-        dcc.Graph(id='goals', figure={}, style={'display': 'inline-block', 'width': '37vw', 'height': '40vh'}),
+        html.Div([
+            dcc.Graph(id='goals', figure={}, style={'display': 'inline-block', 'width': '37vw', 'height': '40vh'}),
 
-        dcc.Graph(id='ages', figure={}, style={'display': 'inline-block', 'width': '37vw', 'height': '40vh'}),
+            dcc.Graph(id='ages', figure={}, style={'display': 'inline-block', 'width': '37vw', 'height': '40vh'}),
 
-        dcc.Graph(id='match', figure={}, style={'display': 'inline-block', 'width': '37vw', 'height': '40vh'}),
+            dcc.Graph(id='penalty', figure={}, style={'display': 'inline-block', 'width': '37vw', 'height': '40vh'}),
 
-        dcc.Graph(id='penalty', figure={}, style={'display': 'inline-block', 'width': '37vw', 'height': '40vh'})
+            dcc.Graph(id='match', figure={}, style={'display': 'inline-block', 'width': '37vw', 'height': '40vh'})
 
-    ], style={"margin-left": "18vw", "transform": "translateY(-100px)"}),
+        ], style={"margin-left": "18vw", "transform": "translateY(-78vh)"}),
         
     ],
-    style={"margin-left": "1vw", "margin-top": "5vh", "margin-right": "5vw"}),
+    style={"margin-left": "1vw", "margin-top": "1vh", "margin-right": "5vw"}),
 
 ])
 
 @app.callback(
       [Output(component_id='goals', component_property='figure'),
       Output(component_id='ages', component_property='figure'),
-      Output(component_id='match', component_property='figure'),
-      Output(component_id='penalty', component_property='figure')],
-      [Input(component_id='year', component_property='value'),
-      Input(component_id='conti', component_property='value')]
+      Output(component_id='penalty', component_property='figure'),
+      Output(component_id='match', component_property='figure')
+      ],
+      [Input(component_id='conti', component_property='value')]
 )
 
-def update_graph(option_slctd, option_slctd2):
+def update_graph(option_slctd):
     dff = df.copy()
-    #dff = dff[dff["year"] == option_slctd]
-    if option_slctd2 == ['all']:
+    if option_slctd == ['all']:
         dff = df
     else:
-        dff = df[df.continent.isin(option_slctd2)]
-    if option_slctd == ['all_y']:
-        dff = df
-    else:
-        dff = df[df.year.isin(option_slctd)]
+        dff = df[df.continent.isin(option_slctd)]
 
 # Plotly express
     fig_g = px.scatter(dff, x="min_playing_time", y="goals", 
                     size="age", 
-                    color="squad", 
+                    color="continent", 
                     hover_data=['squad'], 
                     trendline="ols",
                     trendline_scope="overall",
@@ -106,13 +93,15 @@ def update_graph(option_slctd, option_slctd2):
                         "squad": "team",
                         "penalty_kicks_attempted": "penaltys",},
                     title="Elfmeterschüsse",
+                    color="continent",
                     template="simple_white"
                     )
     
-    fig_m = px.line(dff, x="year", y="matches_played", color='squad',
+    fig_m = px.line(dff, x="year", y="min_playing_time", color='squad',
                     labels={"squad": "team",
                         "matches_played": "Anzahl Spiele"},
-                    title="Spiele pro Team")
+                    title="Spiele pro Team",
+                    template="simple_white")
 
     return fig_g, fig_a, fig_c, fig_m
 
