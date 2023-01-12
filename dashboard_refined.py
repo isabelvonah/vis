@@ -19,19 +19,19 @@ options.append({'label': 'Select All', 'value': "all"})
 app.layout = html.Div([
 
     html.Div([
-        html.Img(src=r"assets/Logo.png", style = {"height": "16vh", 'margin-left': '4vw', 'margin-top': '-0.5vw', 'display': 'inline-block', 'margin-right': '10vw'}), # >---- Position Headline geändert und Größe Logo
-        html.H1("Weltmeisterschaften im Damenfussball", style = {'text-align': 'left', 'margin-left': '-1.5vw', 'font-weight': 'bold', 'font-size': '45pt', 'color': 'white', 'display': 'inline-block '}), #---> Schriftgröße Headline geändert
+        html.Img(src=r"assets/Logo.png", style = {"height": "16vh", 'margin-left': '4vw', 'margin-top': '-0.5vw', 'display': 'inline-block', 'margin-right': '10vw'}),
+        html.H1("Weltmeisterschaften im Damenfussball", style = {'text-align': 'left', 'margin-left': '-1.5vw', 'font-weight': 'bold', 'font-size': '45pt', 'color': 'white', 'display': 'inline-block '}),
         
-    ], style={"padding": "1vw", "margin": "1vw", "background-color": "orange","height": "10vh"}), #das ist der orangene Balken
+    ], style={"padding": "1vw", "margin": "1vw", "background-color": "orange","height": "10vh"}), 
 
      html.Div([
         html.H1("von 1991 bis 2019", style = {'text-align': 'left', 'margin-top': '-1vw', 'margin-left': '21vw', 'font-weight': 'bold', 'font-size': '30pt', 'color': 'orange'}),
-    ],), #----> neues Div für Subheadline eingefügt
+    ],), 
 
     html.Div([
 
         html.Div([
-            html.H5("Wähle Kontinente aus, die Du vergleichen möchtest", style = {'text-align': 'left', 'color': 'white'}), # ---> Rechtschreibung korrigiert und Fond Farbe an Header angepasst.
+            html.H5("Wähle Kontinente aus, die Du vergleichen möchtest", style = {'text-align': 'left', 'color': 'white'}), 
 
             dcc.Checklist(id='conti',
                 options=[{'label':x , 'value':x} for x in all],
@@ -40,11 +40,13 @@ app.layout = html.Div([
                 style={"padding-left":"15%", "padding-top":"10%", "padding-bottom": "10%"}
                 ),
 
-            html.H5("Gespielte Matches pro Turnier", style = {'text-align': 'left', 'color': 'white'}), #---> Rechtschreibung korrigiert und Fond Farbe an Header angepasst.
+            html.H5("Und hier kannst du die gespielten Matches pro Turnier anpassen", style = {'text-align': 'left', 'color': 'white', 'padding-bottom': '10%'}), 
             
-            dcc.RangeSlider(id='matches_played', min=3, max=8, value=[3,8], step=1,)
+            dcc.RangeSlider(id='matches_played', min=3, max=7, value=[3,7], step=1,),
+
+            html.P("Zur Erklärung: In der Gruppenphase werden jeweils drei Spiele pro Mannschaft gespielt.Wenn man die Endrunde (grosser oder kleiner Final) erreicht hat, kam man auf sechs oder sieben Spiele.", style={"padding-top": "10%", "color": "white"})
             
-        ], style={"width": "16vw", "height": "78vh", 'margin-top': '2vw', "padding": "1vw", "background-color": "orange"} ), # ---> grauer Balken geändert in orange und Breite um 1 vergrößert, damit Logo drüber genau in der Mitte ist. Abstand zum oberen Balken vergrößert.
+        ], style={"width": "16vw", "height": "78vh", 'margin-top': '2vw', "padding": "1vw", "background-color": "orange"} ),
 
         html.Div([
             dcc.Graph(id='goals', figure={}, style={'display': 'inline-block', 'width': '37vw', 'height': '40vh'}),
@@ -55,7 +57,7 @@ app.layout = html.Div([
 
             dcc.Graph(id='match', figure={}, style={'display': 'inline-block', 'width': '37vw', 'height': '40vh'})
 
-        ], style={"margin-left": "18vw", 'margin-top': '-1vw', "transform": "translateY(-78vh)"}), #----> Höhe der Graphen an die Schrifthöhe im linken Balken angepasst.
+        ], style={"margin-left": "18vw", 'margin-top': '-1vw', "transform": "translateY(-78vh)"}), 
         
     ],
     style={"margin-left": "1vw", "margin-top": "1vh", "margin-right": "5vw"}),
@@ -80,6 +82,8 @@ def update_graph(option_slctd, option_slctd2):
         dff = dff[dff.continent.isin(option_slctd)]
     dff = dff[(dff["matches_played"] <= option_slctd2[1]) & (dff["matches_played"] >= option_slctd2[0])]
 
+    n = len(dff)
+
 # Plotly express
     fig_g = px.scatter(dff, x="min_playing_time", y="goals", color="continent",
                     labels={
@@ -91,7 +95,7 @@ def update_graph(option_slctd, option_slctd2):
                     hover_data=['squad'], 
                     trendline="ols",
                     trendline_scope="overall",
-                    title="Tore pro Spielzeit",
+                    title="Tore pro Spielzeit (n = " + str(n) + ")",
                     template="simple_white"
                     )
     
@@ -99,7 +103,7 @@ def update_graph(option_slctd, option_slctd2):
                     labels={
                         "age": "Durchschnittsalter"
                     },
-                    title="Durchschnittsalter der ausgewählten Mannschaften", template="simple_white"
+                    title="Durchschnittsalter der ausgewählten Mannschaften (n = " + str(n) + ")", template="simple_white"
                     ).update_layout(yaxis_title="Anzahl Mannschaften")
 
     fig_c = px.bar(dff, x='squad', y='penalty_kicks_attempted',
@@ -108,7 +112,7 @@ def update_graph(option_slctd, option_slctd2):
                         "penalty_kicks_attempted": "Elfmeterschüsse",
                         "continent": "Kontinente"
                     },
-                    title="Elfmeterschüsse",
+                    title="Elfmeterschüsse (n = " + str(n) + ")",
                     color="continent",
                     template="simple_white"
                     )
@@ -118,7 +122,7 @@ def update_graph(option_slctd, option_slctd2):
                         "min_playing_time": "Gesamtspielzeit im Turnier in Minuten",
                         "year": "Jahre"
                     },
-                    title="Spiele pro Team",
+                    title="Spiele pro Team  (n = " + str(n) + ")",
                     template="simple_white"
                     )
 
