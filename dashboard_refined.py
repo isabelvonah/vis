@@ -85,14 +85,18 @@ def update_graph(option_slctd, option_slctd2):
     n = len(dff)
 
 # Plotly express
-    fig_g = px.scatter(dff, x="min_playing_time", y="goals", color="continent",
+    fig_g = px.scatter(dff, x="min_playing_time", y="goals", color="continent", 
                     labels={
                      "min_playing_time": "Gesamtspielzeit im Turnier in Minuten",
                      "goals": "Anzahl Tore",
                      "continent": "Kontinente"
                     },
                     size="age",
-                    hover_data=['squad'], 
+                    hover_name="squad",
+                    hover_data={
+                        'age': False,
+                        'continent': False
+                    },
                     trendline="ols",
                     trendline_scope="overall",
                     title="Tore pro Spielzeit (n = " + str(n) + ")",
@@ -103,7 +107,8 @@ def update_graph(option_slctd, option_slctd2):
                     labels={
                         "age": "Durchschnittsalter"
                     },
-                    title="Durchschnittsalter der ausgewählten Mannschaften (n = " + str(n) + ")", template="simple_white"
+                    title="Durchschnittsalter der ausgewählten Mannschaften (n = " + str(n) + ")", template="simple_white",
+                    hover_name="age"
                     ).update_layout(yaxis_title="Anzahl Mannschaften")
 
     fig_c = px.bar(dff, x='squad', y='penalty_kicks_attempted',
@@ -114,17 +119,38 @@ def update_graph(option_slctd, option_slctd2):
                     },
                     title="Elfmeterschüsse (n = " + str(n) + ")",
                     color="continent",
-                    template="simple_white"
+                    template="simple_white",
+                    hover_name="squad",
+                    hover_data={
+                        'continent': False,
+                        'squad': False,
+                        'year': True
+                    }
                     )
     
     fig_m = px.line(dff, x="year", y="min_playing_time", color='squad',
                     labels={"squad": "Mannschaft",
                         "min_playing_time": "Gesamtspielzeit im Turnier in Minuten",
-                        "year": "Jahre"
+                        "year": "Jahre",
+                        'continent': 'Kontinent'
                     },
                     title="Spiele pro Team  (n = " + str(n) + ")",
-                    template="simple_white"
+                    template="simple_white",
+                    hover_name="squad",
+                    hover_data={
+                        'continent': True,
+                        'squad': False
+                    }
                     )
+    
+    fig_list = [fig_g, fig_a, fig_c, fig_m]
+
+    for i in fig_list:
+        i.update_layout(
+            hoverlabel=dict(
+                bgcolor="white",
+                font_size=13,
+        ))
 
     return fig_g, fig_a, fig_c, fig_m
 
