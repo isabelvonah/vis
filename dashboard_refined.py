@@ -17,7 +17,7 @@ all = df.continent.unique()
 options=[{'label':x , 'value':x} for x in all]
 options.append({'label': 'Select All', 'value': "all"})
 
-start = time.time_ns()
+#start = time.time_ns()
 
 app.layout = html.Div([
 
@@ -47,7 +47,7 @@ app.layout = html.Div([
             
             dcc.RangeSlider(id='matches_played', min=3, max=7, value=[3,7], step=1,),
 
-            html.P("Zur Erklärung: In der Gruppenphase werden jeweils drei Spiele pro Mannschaft gespielt.Wenn man die Endrunde (grosser oder kleiner Final) erreicht hat, kam man auf sechs oder sieben Spiele.", style={"padding-top": "10%", "color": "white"})
+            html.P("Zur Erklärung: In der Gruppenphase werden jeweils drei Spiele pro Mannschaft gespielt. Wenn man die Endrunde (grosser oder kleiner Final) erreicht hat, kam man auf sechs oder sieben Spiele.", style={"padding-top": "10%", "color": "white"})
             
         ], style={"width": "16vw", "height": "78vh", 'margin-top': '2vw', "padding": "1vw", "background-color": "orange"} ),
 
@@ -92,13 +92,15 @@ def update_graph(option_slctd, option_slctd2):
                     labels={
                      "min_playing_time": "Gesamtspielzeit im Turnier in Minuten",
                      "goals": "Anzahl Tore",
-                     "continent": "Kontinente"
+                     "continent": "Kontinente",
+                     'year': "Jahr"
                     },
                     size="age",
                     hover_name="squad",
                     hover_data={
                         'age': False,
-                        'continent': False
+                        'continent': False,
+                        'year': True
                     },
                     trendline="ols",
                     trendline_scope="overall",
@@ -160,8 +162,8 @@ def update_graph(option_slctd, option_slctd2):
 if __name__ == '__main__':
                app.run_server(debug=True)
 
-end = time.time_ns()
+#end = time.time_ns()
 
-timeresult = end - start
+#timeresult = end - start
 
-print("Time taken", timeresult, "ns")
+#print("Time taken", timeresult, "ns")
