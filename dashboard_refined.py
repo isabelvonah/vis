@@ -1,5 +1,6 @@
 import pandas as pd
 import plotly.express as px
+import time
 
 import dash
 from dash import dcc
@@ -15,6 +16,8 @@ all = df.continent.unique()
 
 options=[{'label':x , 'value':x} for x in all]
 options.append({'label': 'Select All', 'value': "all"})
+
+start = time.time_ns()
 
 app.layout = html.Div([
 
@@ -156,3 +159,9 @@ def update_graph(option_slctd, option_slctd2):
 
 if __name__ == '__main__':
                app.run_server(debug=True)
+
+end = time.time_ns()
+
+timeresult = end - start
+
+print("Time taken", timeresult, "ns")
