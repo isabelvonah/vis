@@ -112,7 +112,7 @@ def update_graph(option_slctd, option_slctd2):
                     labels={
                         "age": "Durchschnittsalter"
                     },
-                    title="Durchschnittsalter der ausgewählten Mannschaften (n = " + str(n) + ")", template="simple_white",
+                    title="Verteilung der Durchschnittsalter (n = " + str(n) + ")", template="simple_white",
                     hover_name="age"
                     ).update_layout(yaxis_title="Anzahl Mannschaften")
 
