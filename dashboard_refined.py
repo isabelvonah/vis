@@ -1,5 +1,7 @@
 import pandas as pd
 import plotly.express as px
+
+#Performancetest
 import time
 
 import dash
@@ -14,9 +16,7 @@ df = pd.read_csv(r'cup_continent.csv')
 
 all = df.continent.unique()
 
-options=[{'label':x , 'value':x} for x in all]
-options.append({'label': 'Select All', 'value': "all"})
-
+#Performancetest
 #start = time.time_ns()
 
 app.layout = html.Div([
@@ -162,6 +162,7 @@ def update_graph(option_slctd, option_slctd2):
 if __name__ == '__main__':
                app.run_server(debug=True)
 
+#Performancetest
 #end = time.time_ns()
 
 #timeresult = end - start
